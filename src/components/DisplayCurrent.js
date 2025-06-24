@@ -39,7 +39,7 @@ const DisplayCurrent = () => {
         scrollbarWidth: "none",       // Firefox
         msOverflowStyle: "none",      // IE/Edge
       }}
-      className="bg-light hide-scroll"
+      className="bg-light hide-scroll mt-5"
     >
       <style>
         {`
@@ -75,7 +75,11 @@ const DisplayCurrent = () => {
                   width: "fit-content",
                 }}
               >
-                <div dangerouslySetInnerHTML={{ __html: msg.response }} />
+<div
+  dangerouslySetInnerHTML={{
+    __html: msg.response.replace(/```+$/, "").trim(),
+  }}
+/>
               </div>
             </div>
           </div>

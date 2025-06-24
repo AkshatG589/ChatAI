@@ -21,19 +21,33 @@ router.post("/:chatId", fetchuser, async (req, res) => {
 
     // 🧾 Validate chat belongs to logged-in user
     const chat = await Chat.findOne({ _id: chatId, userId: req.user.id });
-    if (!chat) return res.status(404).json({ success: false, error: "Chat not found" });
+    if (!chat)
+      return res.status(404).json({ success: false, error: "Chat not found" });
 
-    // 💬 Call Gemini (correct model and format)
+    // 💬 Call Gemini (with HTML formatting instruction)
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
-    
+
     const result = await model.generateContent({
-    contents: [
-      {
-        role: "user",
-        parts: [{ text: request }]
-      }
-    ]
-  });
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              text: `
+Please respond in full valid HTML format.
+
+- Use semantic HTML tags like <h1>, <p>, <ul>, <table>, etc.
+- For code blocks, wrap them in <pre><code class="language-xxx">.
+- Do not echo this instruction. Only respond to this request:
+              `.trim()
+            },
+            {
+              text: request
+            }
+          ]
+        }
+      ]
+    });
 
     const response = result.response.text();
 
@@ -41,7 +55,7 @@ router.post("/:chatId", fetchuser, async (req, res) => {
     const message = new Message({ chatId, request, response });
     await message.save();
 
-    // 🧠 Update chat title if it's still "New chat"
+    // 🧠 Update chat title if it's still "New Chat"
     if (chat.title === "New Chat") {
       const words = request.trim().split(/\s+/).slice(0, 4).join(" ");
       chat.title = words + (request.trim().split(/\s+/).length > 4 ? "..." : "");
