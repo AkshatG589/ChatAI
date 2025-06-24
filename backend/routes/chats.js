@@ -29,10 +29,17 @@ router.get("/", fetchuser, async (req, res) => {
 // 📌 DELETE /api/chats/:id — Delete a chat
 router.delete("/:id", fetchuser, async (req, res) => {
   try {
+    // Step 1: Delete the chat
     const chat = await Chat.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
-    if (!chat) return res.status(404).json({ success: false, error: "Chat not found" });
 
-    res.status(200).json({ success: true, message: "Chat deleted successfully" });
+    if (!chat) {
+      return res.status(404).json({ success: false, error: "Chat not found" });
+    }
+
+    // ✅ Step 2: Delete all messages for this chat
+    await Message.deleteMany({ chatId: req.params.id });
+
+    res.status(200).json({ success: true, message: "Chat and its messages deleted successfully" });
   } catch (err) {
     console.error("Delete Chat Error:", err.message);
     res.status(500).json({ success: false, error: "Server Error" });

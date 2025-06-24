@@ -36,6 +36,7 @@ const ChatState = ({ children }) => {
       const data = await res.json();
       if (data.success) {
         setChats([data.chat, ...chats]);
+        setCurrentChatId(data._id)
         return data.chat;
       }
     } catch (err) {
@@ -98,6 +99,31 @@ const createGuestChat = async (message) => {
     return { success: false, error: "Something went wrong" };
   }
 };
+//deleting chat
+const deleteChat = async (chatId, token) => {
+  try {
+    const res = await fetch(`${host}/api/chats/${chatId}`, {
+      method: "DELETE",
+      headers: {
+        "auth-token": token,
+      },
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      // Remove chat from state
+      setChats((prevChats) => prevChats.filter((chat) => chat._id !== chatId));
+
+      // Optionally reset current chat if it was deleted
+      if (currentChatId === chatId) {
+        setCurrentChatId(null);
+        setMessages([]);
+      }
+    }
+  } catch (err) {
+    console.error("Delete Chat Error:", err);
+  }
+};
   return (
     <ChatContext.Provider
       value={{
@@ -109,6 +135,7 @@ const createGuestChat = async (message) => {
         selectChat,
         sendMessage,
         createGuestChat,
+        deleteChat,
       }}
     >
       {children}

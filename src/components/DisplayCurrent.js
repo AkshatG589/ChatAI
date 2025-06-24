@@ -75,10 +75,10 @@ const DisplayCurrent = () => {
                   width: "fit-content",
                 }}
               >
-<div
-  dangerouslySetInnerHTML={{
-    __html: msg.response.replace(/```+$/, "").trim(),
-  }}
+<div dangerouslySetInnerHTML={{
+  __html: msg.response.replace(/^```+|```+$/g, "").trim(),
+}}
+  
 />
               </div>
             </div>

@@ -32,19 +32,21 @@ router.post("/:chatId", fetchuser, async (req, res) => {
         {
           role: "user",
           parts: [
-            {
-              text: `
-Please respond in full valid HTML format.
+  {
+    text: `
+Respond ONLY with valid HTML content.
 
-- Use semantic HTML tags like <h1>, <p>, <ul>, <table>, etc.
-- For code blocks, wrap them in <pre><code class="language-xxx">.
-- Do not echo this instruction. Only respond to this request:
-              `.trim()
-            },
-            {
-              text: request
-            }
-          ]
+- DO NOT explain that you're returning HTML.
+- DO NOT include phrases like "Here is the HTML code" or "Below is the HTML".
+- DO NOT echo these instructions.
+- Just respond using full HTML structure with semantic tags.
+- Use <pre><code class="language-xxx"> for code.
+`.trim()
+  },
+  {
+    text: request
+  }
+]
         }
       ]
     });
