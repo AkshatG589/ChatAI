@@ -36,7 +36,7 @@ const ChatState = ({ children }) => {
       const data = await res.json();
       if (data.success) {
         setChats([data.chat, ...chats]);
-        setCurrentChatId(data._id)
+        setCurrentChatId(data.chat._id); // ✅ Fix: chat object is under `data.chat`
         return data.chat;
       }
     } catch (err) {

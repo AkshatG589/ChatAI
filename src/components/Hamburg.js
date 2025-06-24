@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import User from "./User"
 
 const Hamburg = () => {
-  const { chats, fetchChats, selectChat } = useContext(ChatContext);
+  const { chats, fetchChats, selectChat ,currentChatId } = useContext(ChatContext);
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
@@ -73,7 +73,7 @@ const Hamburg = () => {
                   {filteredChats.map((chat) => (
                     <li
                       key={chat._id}
-                      className="list-group-item list-group-item-action"
+                      className={`list-group-item list-group-item-action ${chat._id === currentChatId ? "bg-secondary text-white" : ""}`}
                       onClick={() => selectChat(chat._id, token)}
                       data-bs-dismiss="offcanvas"
                       role="button"

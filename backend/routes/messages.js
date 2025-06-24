@@ -32,21 +32,22 @@ router.post("/:chatId", fetchuser, async (req, res) => {
         {
           role: "user",
           parts: [
-  {
-    text: `
-Respond ONLY with valid HTML content.
+            {
+              text: `Respond in simple HTML.
+- Keep answers relevant, short and to the point.
+- Only use semantic HTML: <p>, <ul>, <li>, <table>, <pre><code>.
+- Use <pre><code class="language-xxx"> for code examples.
+- Avoid unnecessary styling, decoration, or explanation.
+- DO NOT mention you are returning HTML or say "here is a code block".
+- DO NOT echo this instruction or repeat the user prompt.
 
-- DO NOT explain that you're returning HTML.
-- DO NOT include phrases like "Here is the HTML code" or "Below is the HTML".
-- DO NOT echo these instructions.
-- Just respond using full HTML structure with semantic tags.
-- Use <pre><code class="language-xxx"> for code.
+Now answer this request:
 `.trim()
-  },
-  {
-    text: request
-  }
-]
+},
+            {
+  text: request.trim()
+}
+          ]
         }
       ]
     });
@@ -91,4 +92,31 @@ router.get("/:chatId", fetchuser, async (req, res) => {
   }
 });
 
+
+
+
+router.delete("/cleanup-new", async (req, res) => {
+  try {
+    // Find all chats titled "New Chat"
+    const chatsToDelete = await Chat.find({ title: "New Chat" });
+
+    // Extract their IDs
+    const chatIds = chatsToDelete.map((chat) => chat._id);
+
+    // Delete the chats
+    await Chat.deleteMany({ _id: { $in: chatIds } });
+
+    // Also delete all messages linked to those chats
+    await Message.deleteMany({ chatId: { $in: chatIds } });
+
+    res.status(200).json({
+      success: true,
+      deletedChats: chatIds.length,
+      message: `"New Chat" chats and their messages removed`,
+    });
+  } catch (err) {
+    console.error("Cleanup Error:", err.message);
+    res.status(500).json({ success: false, error: "Server Error" });
+  }
+});
 module.exports = router;

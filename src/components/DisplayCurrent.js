@@ -1,92 +1,80 @@
 import React, { useContext } from "react";
 import ChatContext from "../context/chat/chatContext";
+import ChatBox from "./ChatBox"; // 👈 import here
+import NewChat from "./NewChat"
 
 const DisplayCurrent = () => {
   const { currentChatId, messages } = useContext(ChatContext);
 
-  if (!currentChatId) {
-    return (
-      <div
-        className="d-flex justify-content-center align-items-center text-muted"
-        style={{
-          position: "fixed",
-          top: "0vh",
-          left: 0,
-          width: "100vw",
-          height: "100vh",
-          backgroundColor: "#f8f9fa",
-        }}
-      >
-        <h4>New Chat</h4>
-      </div>
-    );
-  }
-
   return (
     <>
-    <div
-      style={{
-        position: "fixed",
-        left: "0%",
-        width: "100vw",
-        height: "70vh",
-        overflowY: "scroll", // keep scrolling enabled
-        padding: "1rem",
-        wordWrap: "break-word",
-        wordBreak: "break-word",
+      <div
+        style={{
+          position: "fixed",
+          left: "0%",
+          top: "0%",
+          width: "100vw", 
+          height: "90vh"
+          , // leave space for ChatBox
+          overflowY: "scroll",
+          padding: "1rem",
+          wordWrap: "break-word",
+          wordBreak: "break-word",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+        }}
+        className="bg-light hide-scroll mt-5"
+      >
+        <style>
+          {`
+            .hide-scroll::-webkit-scrollbar {
+              display: none;
+            }
+          `}
+        </style>
 
-        /* 🔽 Hide scrollbar (works for modern browsers) */
-        scrollbarWidth: "none",       // Firefox
-        msOverflowStyle: "none",      // IE/Edge
-      }}
-      className="bg-light hide-scroll mt-5"
-    >
-      <style>
-        {`
-          .hide-scroll::-webkit-scrollbar {
-            display: none;
-          }
-        `}
-      </style>
-
-      {messages.length === 0 ? (
-        <p className="text-center text-muted">No messages yet.</p>
-      ) : (
-        messages.map((msg, index) => (
-          <div key={index} className="mb-5 mt-5">
-            {/* User Message */}
-            <div className="d-flex justify-content-end">
-              <div
-                className="bg-primary text-white p-2 px-3 rounded"
-                style={{ maxWidth: "75%" }}
-              >
-                {msg.request}
-              </div>
-            </div>
-
-            {/* Gemini Response */}
-            <div className="d-flex justify-content-start mt-2">
-              <div
-                className="bg-white text-dark p-2 px-3 rounded shadow-sm"
-                style={{
-                  maxWidth: "100%",
-                  overflowWrap: "break-word",
-                  wordBreak: "break-word",
-                  width: "fit-content",
-                }}
-              >
-<div dangerouslySetInnerHTML={{
-  __html: msg.response.replace(/^```+|```+$/g, "").trim(),
-}}
-  
-/>
-              </div>
-            </div>
+        {!currentChatId ? (
+          <div
+            className="d-flex justify-content-center align-items-center text-muted"
+            style={{ height: "100%", width: "100%", flexDirection: "column"}}
+          >
+            <NewChat />
+            <h4>Create New Chat</h4>
           </div>
-        ))
-      )}
-    </div>
-    <div className="bg-dark">hello</div>
+        ) : messages.length === 0 ? (
+          <div className="d-flex justify-content-center align-items-center" style={{ height: "100%", width: "100%" }}>
+            <p className="text-dark fs-4" style={{fontWeight:"bold"}}>What can i help you with</p>
+          </div>
+        ) : (
+          messages.map((msg, index) => (
+            <div key={index} className="mb-5 mt-5">
+              {/* User */}
+              <div className="d-flex justify-content-end">
+                <div className="bg-primary text-white p-2 px-3 rounded" style={{ maxWidth: "75%" }}>
+                  {msg.request}
+                </div>
+              </div>
+
+              {/* Gemini */}
+              <div className="d-flex justify-content-start mt-2">
+                <div
+                  className="bg-white text-dark p-2 px-3 rounded shadow-sm"
+                  style={{ maxWidth: "100%", overflowWrap: "break-word", wordBreak: "break-word", width: "fit-content" }}
+                >
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: msg.response.replace(/^```+|```+$/g, "").trim(),
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Fixed ChatBox at bottom */}
+      <ChatBox />
     </>
   );
 };
