@@ -1,21 +1,33 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef } from "react";
 import ChatContext from "../context/chat/chatContext";
-import ChatBox from "./ChatBox"; // 👈 import here
-import NewChat from "./NewChat"
+import ChatBox from "./ChatBox";
+import NewChat from "./NewChat";
 
 const DisplayCurrent = () => {
-  const { currentChatId, messages } = useContext(ChatContext);
+  const { currentChatId, messages , selectChat} = useContext(ChatContext);
+  const messageContainerRef = useRef(null);
+
+  useEffect(()=>{
+    selectChat(currentChatId,localStorage.getItem("token"))
+  },[currentChatId])
+  // 🔁 Scroll to bottom whenever chat changes or messages update
+  
+  useEffect(() => {
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+    }
+  }, [currentChatId, messages]);
 
   return (
     <>
       <div
+        ref={messageContainerRef}
         style={{
           position: "fixed",
           left: "0%",
           top: "0%",
-          width: "100vw", 
-          height: "80vh"
-          , // leave space for ChatBox
+          width: "100vw",
+          height: "80vh",
           overflowY: "scroll",
           padding: "1rem",
           wordWrap: "break-word",
@@ -36,21 +48,29 @@ const DisplayCurrent = () => {
         {!currentChatId ? (
           <div
             className="d-flex justify-content-center align-items-center text-muted"
-            style={{ height: "100%", width: "100%", flexDirection: "column"}}
+            style={{ height: "100%", width: "100%", flexDirection: "column" }}
           >
             <NewChat />
             <h4>Create New Chat</h4>
           </div>
         ) : messages.length === 0 ? (
-          <div className="d-flex justify-content-center align-items-center" style={{ height: "100%", width: "100%" }}>
-            <p className="text-dark fs-4" style={{fontWeight:"bold"}}>What can i help you with?</p>
+          <div
+            className="d-flex justify-content-center align-items-center"
+            style={{ height: "100%", width: "100%" }}
+          >
+            <p className="text-dark fs-4" style={{ fontWeight: "bold" }}>
+              What can I help you with?
+            </p>
           </div>
         ) : (
           messages.map((msg, index) => (
             <div key={index} className="mb-5 mt-5">
               {/* User */}
               <div className="d-flex justify-content-end">
-                <div className="bg-primary text-white p-2 px-3 rounded" style={{ maxWidth: "75%" }}>
+                <div
+                  className="bg-primary text-white p-2 px-3 rounded"
+                  style={{ maxWidth: "75%" }}
+                >
                   {msg.request}
                 </div>
               </div>
@@ -59,7 +79,12 @@ const DisplayCurrent = () => {
               <div className="d-flex justify-content-start mt-2">
                 <div
                   className="bg-white text-dark p-2 px-3 rounded shadow-sm"
-                  style={{ maxWidth: "100%", overflowWrap: "break-word", wordBreak: "break-word", width: "fit-content" }}
+                  style={{
+                    maxWidth: "100%",
+                    overflowWrap: "break-word",
+                    wordBreak: "break-word",
+                    width: "fit-content",
+                  }}
                 >
                   <div
                     dangerouslySetInnerHTML={{
