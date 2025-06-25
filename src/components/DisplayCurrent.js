@@ -14,7 +14,7 @@ const DisplayCurrent = () => {
           left: "0%",
           top: "0%",
           width: "100vw", 
-          height: "90vh"
+          height: "80vh"
           , // leave space for ChatBox
           overflowY: "scroll",
           padding: "1rem",
@@ -43,7 +43,7 @@ const DisplayCurrent = () => {
           </div>
         ) : messages.length === 0 ? (
           <div className="d-flex justify-content-center align-items-center" style={{ height: "100%", width: "100%" }}>
-            <p className="text-dark fs-4" style={{fontWeight:"bold"}}>What can i help you with</p>
+            <p className="text-dark fs-4" style={{fontWeight:"bold"}}>What can i help you with?</p>
           </div>
         ) : (
           messages.map((msg, index) => (

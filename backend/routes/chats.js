@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Chat = require("../models/Chat");
+const Message = require("../models/Message");
+const mongoose = require("mongoose");
 const fetchuser = require("../middleware/fetchuser");
 
 // 📌 POST /api/chats — Create a new chat
@@ -26,20 +28,40 @@ router.get("/", fetchuser, async (req, res) => {
   }
 });
 
-// 📌 DELETE /api/chats/:id — Delete a chat
+// 📌 DELETE /api/chats/:id — Delete a chat and its messages
 router.delete("/:id", fetchuser, async (req, res) => {
   try {
-    // Step 1: Delete the chat
-    const chat = await Chat.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
+    const chatIdParam = req.params.id;
+
+    // Validate ID format
+    if (!mongoose.Types.ObjectId.isValid(chatIdParam)) {
+      return res.status(400).json({ success: false, error: "Invalid chat ID" });
+    }
+
+    const chatId = new mongoose.Types.ObjectId(chatIdParam);
+
+    console.log("User ID:", req.user.id);
+    console.log("Chat ID:", chatId);
+
+    // Step 1: Delete the chat owned by the user
+    const chat = await Chat.findOneAndDelete({
+      _id: chatId,
+      userId: req.user.id,
+    });
 
     if (!chat) {
       return res.status(404).json({ success: false, error: "Chat not found" });
     }
 
-    // ✅ Step 2: Delete all messages for this chat
-    await Message.deleteMany({ chatId: req.params.id });
+    // Step 2: Delete all messages linked to this chat
+    const deleteResult = await Message.deleteMany({ chatId: chatId });
+    console.log("Messages deleted:", deleteResult.deletedCount);
 
-    res.status(200).json({ success: true, message: "Chat and its messages deleted successfully" });
+    res.status(200).json({
+      success: true,
+      message: "Chat and its messages deleted successfully",
+      deletedMessages: deleteResult.deletedCount,
+    });
   } catch (err) {
     console.error("Delete Chat Error:", err.message);
     res.status(500).json({ success: false, error: "Server Error" });

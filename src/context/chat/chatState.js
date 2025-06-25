@@ -105,23 +105,55 @@ const deleteChat = async (chatId, token) => {
     const res = await fetch(`${host}/api/chats/${chatId}`, {
       method: "DELETE",
       headers: {
+        "Content-Type": "application/json",
         "auth-token": token,
       },
     });
 
     const data = await res.json();
     if (data.success) {
-      // Remove chat from state
+      // ✅ Remove chat from local state
       setChats((prevChats) => prevChats.filter((chat) => chat._id !== chatId));
 
-      // Optionally reset current chat if it was deleted
-      if (currentChatId === chatId) {
+      // ✅ If deleted chat was the current chat, clear it
+      if (chatId === currentChatId) {
         setCurrentChatId(null);
         setMessages([]);
       }
     }
   } catch (err) {
-    console.error("Delete Chat Error:", err);
+    console.error("Delete Chat Error:", err.message);
+  }
+};
+
+//updating title
+const renameChat = async (chatId, newTitle, token) => {
+  try {
+    const res = await fetch(`${host}/api/chats/${chatId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "auth-token": token,
+      },
+      body: JSON.stringify({ title: newTitle }),
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      // 🧠 Optionally update local state
+      setChats((prevChats) =>
+        prevChats.map((chat) =>
+          chat._id === chatId ? { ...chat, title: newTitle, updatedAt: Date.now() } : chat
+        )
+      );
+      return true;
+    } else {
+      console.error("Rename failed:", data.error);
+      return false;
+    }
+  } catch (err) {
+    console.error("Rename Chat Error:", err);
+    return false;
   }
 };
   return (
@@ -136,6 +168,7 @@ const deleteChat = async (chatId, token) => {
         sendMessage,
         createGuestChat,
         deleteChat,
+        renameChat,
       }}
     >
       {children}
