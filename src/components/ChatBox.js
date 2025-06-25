@@ -5,17 +5,28 @@ import "./css/animation.css"
 const ChatBox = () => {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
-  const { currentChatId, sendMessage } = useContext(ChatContext);
+  const { currentChatId, sendMessage ,sendGuestMessage} = useContext(ChatContext);
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!prompt.trim() || !currentChatId) return;
+  e.preventDefault();
+  const trimmed = prompt.trim();
+  if (!trimmed) return;
 
-    setLoading(true);
-    await sendMessage(currentChatId, prompt, localStorage.getItem("token"));
-    setPrompt("");
-    setLoading(false);
-  };
+  setLoading(true);
+
+  const token = localStorage.getItem("token");
+
+  if (token && currentChatId) {
+    // Authenticated user
+    await sendMessage(currentChatId, trimmed, token);
+  } else {
+    // Guest user
+     await sendGuestMessage(trimmed);
+  }
+
+  setPrompt("");
+  setLoading(false);
+};
 
   return (
     <form

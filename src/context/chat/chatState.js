@@ -7,6 +7,7 @@ const ChatState = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [currentChatId, setCurrentChatId] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [guestMessages, setGuestMessages] = useState([]);
 
   // 📌 Fetch all chats
   const fetchChats = async (token) => {
@@ -93,9 +94,16 @@ const createGuestChat = async (message) => {
     });
 
     const data = await res.json();
-    return data;
+
+    if (data.success) {
+      setGuestMessages((prev) => [...prev, { request: message, response: data.response }]);
+      return { success: true };
+    } else {
+      console.error("Guest Chat API Error:", data.error);
+      return { success: false, error: data.error || "Unknown error" };
+    }
   } catch (err) {
-    console.error("Guest Chat Error:", err);
+    console.error("Guest Chat Error:", err.message);
     return { success: false, error: "Something went wrong" };
   }
 };
@@ -161,6 +169,7 @@ const sendGuestMessage = async (request) => {
         createGuestChat,
         deleteChat,
         sendGuestMessage,
+        guestMessages,
       }}
     >
       {children}

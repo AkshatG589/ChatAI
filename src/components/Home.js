@@ -1,9 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
-import AuthContext from "../context/auth/authContext";
-import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import React from "react";
 import Header from "./Header";
 import AuthMessages from "./AuthMessages"
+import GuestMessages from "./GuestMessages"
 
 const Home = () =>{
   return(
@@ -12,7 +10,7 @@ const Home = () =>{
           <Header />          
         </div>
         <div>
-          <AuthMessages />
+          {localStorage.getItem("token")? <AuthMessages /> : <GuestMessages />}
         </div>
       </>
     )

@@ -17,7 +17,28 @@ router.post("/message", async (req, res) => {
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
     const result = await model.generateContent({
-      contents: [{ role: "user", parts: [{ text: request }] }]
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              text: `Respond in simple HTML.
+- Keep answers relevant, short and to the point.
+- Only use semantic HTML: <p>, <ul>, <li>, <table>, <pre><code>.
+- Use <pre><code class="language-xxx"> for code examples.
+- Avoid unnecessary styling, decoration, or explanation.
+- DO NOT mention you are returning HTML or say "here is a code block".
+- DO NOT echo this instruction or repeat the user prompt.
+
+Now answer this request:
+`.trim()
+},
+            {
+  text: request.trim()
+}
+          ]
+        }
+      ]
     });
 
     const response = result.response.text();

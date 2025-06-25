@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import AuthContext from "./authContext";
 
 const AuthState = ({ children }) => {
@@ -7,15 +7,13 @@ const AuthState = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
- /*  
   useEffect(() => {
     if (token) {
       getUser();
     } else {
       setLoading(false);
     }
-  }, [token]);*/
+  }, [token]);
 
   // 📌 Register User
   const register = async (userData) => {
