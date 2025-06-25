@@ -126,34 +126,26 @@ const deleteChat = async (chatId, token) => {
   }
 };
 
-//updating title
-const renameChat = async (chatId, newTitle, token) => {
+//sending guest requests
+const sendGuestMessage = async (request) => {
   try {
-    const res = await fetch(`${host}/api/chats/${chatId}`, {
-      method: "PUT",
+    const res = await fetch("http://localhost:5000/api/guest/message", {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "auth-token": token,
       },
-      body: JSON.stringify({ title: newTitle }),
+      body: JSON.stringify({ request }),
     });
 
     const data = await res.json();
-    if (data.success) {
-      // 🧠 Optionally update local state
-      setChats((prevChats) =>
-        prevChats.map((chat) =>
-          chat._id === chatId ? { ...chat, title: newTitle, updatedAt: Date.now() } : chat
-        )
-      );
-      return true;
-    } else {
-      console.error("Rename failed:", data.error);
-      return false;
+    if (!data.success) {
+      throw new Error(data.error || "Failed to get AI response");
     }
-  } catch (err) {
-    console.error("Rename Chat Error:", err);
-    return false;
+
+    return data.response; // return Gemini AI response
+  } catch (error) {
+    console.error("Guest Message Error:", error.message);
+    return null;
   }
 };
   return (
@@ -168,7 +160,7 @@ const renameChat = async (chatId, newTitle, token) => {
         sendMessage,
         createGuestChat,
         deleteChat,
-        renameChat,
+        sendGuestMessage,
       }}
     >
       {children}

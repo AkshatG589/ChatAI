@@ -3,7 +3,7 @@ import AuthContext from "../context/auth/authContext";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import Header from "./Header";
-import DisplayCurrent from "./DisplayCurrent"
+import AuthMessages from "./AuthMessages"
 
 const Home = () =>{
   return(
@@ -12,7 +12,7 @@ const Home = () =>{
           <Header />          
         </div>
         <div>
-          <DisplayCurrent />
+          <AuthMessages />
         </div>
       </>
     )

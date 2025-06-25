@@ -3,12 +3,14 @@ import ChatContext from "../context/chat/chatContext";
 import ChatBox from "./ChatBox";
 import NewChat from "./NewChat";
 
-const DisplayCurrent = () => {
+const AuthMessages = () => {
   const { currentChatId, messages , selectChat} = useContext(ChatContext);
   const messageContainerRef = useRef(null);
 
   useEffect(()=>{
-    selectChat(currentChatId,localStorage.getItem("token"))
+    if(currentChatId){
+      selectChat(currentChatId,localStorage.getItem("token"))
+    }
   },[currentChatId])
   // 🔁 Scroll to bottom whenever chat changes or messages update
   
@@ -104,4 +106,4 @@ const DisplayCurrent = () => {
   );
 };
 
-export default DisplayCurrent;
+export default AuthMessages;

@@ -92,23 +92,4 @@ router.get("/:chatId", fetchuser, async (req, res) => {
   }
 });
 
-
-
-
-router.delete("/cleanup-new", async (req, res) => {
-  try {
-
-    // Delete ALL messages from the database
-    const messageResult = await Message.deleteMany({});
-
-    res.status(200).json({
-      success: true,
-      deletedMessages: messageResult.deletedCount,
-      message: `ALL messages removed from database`,
-    });
-  } catch (err) {
-    console.error("Cleanup Error:", err.message);
-    res.status(500).json({ success: false, error: "Server Error" });
-  }
-});
 module.exports = router;

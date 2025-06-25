@@ -40,9 +40,6 @@ router.delete("/:id", fetchuser, async (req, res) => {
 
     const chatId = new mongoose.Types.ObjectId(chatIdParam);
 
-    console.log("User ID:", req.user.id);
-    console.log("Chat ID:", chatId);
-
     // Step 1: Delete the chat owned by the user
     const chat = await Chat.findOneAndDelete({
       _id: chatId,
@@ -55,7 +52,6 @@ router.delete("/:id", fetchuser, async (req, res) => {
 
     // Step 2: Delete all messages linked to this chat
     const deleteResult = await Message.deleteMany({ chatId: chatId });
-    console.log("Messages deleted:", deleteResult.deletedCount);
 
     res.status(200).json({
       success: true,
@@ -68,22 +64,5 @@ router.delete("/:id", fetchuser, async (req, res) => {
   }
 });
 
-// 📌 PUT /api/chats/:id — Rename chat title
-router.put("/:id", fetchuser, async (req, res) => {
-  try {
-    const { title } = req.body;
-    const chat = await Chat.findOneAndUpdate(
-      { _id: req.params.id, userId: req.user.id },
-      { title, updatedAt: Date.now() },
-      { new: true }
-    );
-    if (!chat) return res.status(404).json({ success: false, error: "Chat not found" });
-
-    res.status(200).json({ success: true, chat });
-  } catch (err) {
-    console.error("Rename Chat Error:", err.message);
-    res.status(500).json({ success: false, error: "Server Error" });
-  }
-});
 
 module.exports = router;
