@@ -22,6 +22,13 @@ const ChatBox = () => {
     setLoading(false);
   };
 
+  // Submit on Ctrl+Enter
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && e.ctrlKey) {
+      handleSubmit(e);
+    }
+  };
+
   return (
     <form
       onSubmit={handleSubmit}
@@ -29,8 +36,7 @@ const ChatBox = () => {
       style={{ zIndex: 10 }}
     >
       <div className="container d-flex gap-2">
-        <input
-          type="text"
+        <textarea
           className="form-control text-muted"
           placeholder={
             currentChatId
@@ -39,8 +45,11 @@ const ChatBox = () => {
           }
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
+          onKeyDown={handleKeyDown}
           disabled={!currentChatId}
-        />
+          rows={1}
+          style={{ resize: "none", maxHeight: "200px" }}
+        ></textarea>
 
         <button
           className="btn btn-dark d-flex align-items-center justify-content-center"

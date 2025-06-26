@@ -12,7 +12,7 @@ const sendOTPEmail = async (email, username, otp) => {
   });
 
   const info = await transporter.sendMail({
-    from: `"chatgpt clone" <${process.env.SMTP_USER}>`,
+    from: `"ChatAi" <${process.env.SMTP_USER}>`,
     to: email,
     subject: "Your OTP Code",
     text: `Hello ${username}, your OTP is ${otp}. It expires in 1 minute.`,
