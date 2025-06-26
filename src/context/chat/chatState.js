@@ -82,31 +82,6 @@ const ChatState = ({ children }) => {
       console.error("Send Message Error:", err);
     }
   };
-  // context/chat/chatState.js
-const createGuestChat = async (message) => {
-  try {
-    const res = await fetch(`${host}/api/guest/message`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ request: message }),
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      setGuestMessages((prev) => [...prev, { request: message, response: data.response }]);
-      return { success: true };
-    } else {
-      console.error("Guest Chat API Error:", data.error);
-      return { success: false, error: data.error || "Unknown error" };
-    }
-  } catch (err) {
-    console.error("Guest Chat Error:", err.message);
-    return { success: false, error: "Something went wrong" };
-  }
-};
 //deleting chat
 const deleteChat = async (chatId, token) => {
   try {
@@ -149,8 +124,7 @@ const sendGuestMessage = async (request) => {
     if (!data.success) {
       throw new Error(data.error || "Failed to get AI response");
     }
-
-    return data.response; // return Gemini AI response
+    setGuestMessages((prev) => [...prev, { request: request, response: data.response }]);
   } catch (error) {
     console.error("Guest Message Error:", error.message);
     return null;
@@ -166,7 +140,6 @@ const sendGuestMessage = async (request) => {
         createChat,
         selectChat,
         sendMessage,
-        createGuestChat,
         deleteChat,
         sendGuestMessage,
         guestMessages,

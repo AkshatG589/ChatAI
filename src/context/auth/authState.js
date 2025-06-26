@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import AuthContext from "./authContext";
 
 const AuthState = ({ children }) => {
@@ -7,17 +7,16 @@ const AuthState = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
+/*  useEffect(() => {
     if (token) {
       getUser();
     } else {
       setLoading(false);
     }
   }, [token]);
-
+*/
   // 📌 Register User
   const register = async (userData) => {
-    alert(process.env.REACT_APP_API_BASE)
     const res = await fetch(`${host}/api/auth/register`, {
       method: "POST",
       headers: {

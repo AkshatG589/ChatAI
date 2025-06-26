@@ -7,11 +7,12 @@ const AuthMessages = () => {
   const { currentChatId, messages , selectChat} = useContext(ChatContext);
   const messageContainerRef = useRef(null);
 
-  useEffect(()=>{
-    if(currentChatId){
-      selectChat(currentChatId,localStorage.getItem("token"))
-    }
-  },[currentChatId])
+  useEffect(() => {
+  if (currentChatId) {
+    selectChat(currentChatId, localStorage.getItem("token"));
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [currentChatId]);
   // 🔁 Scroll to bottom whenever chat changes or messages update
   
   useEffect(() => {

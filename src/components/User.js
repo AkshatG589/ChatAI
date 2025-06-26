@@ -14,6 +14,7 @@ const User = () => {
     if (token && !user) {
       getUser();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   // Close dropdown on outside click
