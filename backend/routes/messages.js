@@ -37,7 +37,7 @@ router.post("/:chatId", fetchuser, async (req, res) => {
 - Keep answers relevant, short and to the point.
 - Only use semantic HTML: <p>, <ul>, <li>, <table>, <pre><code>.
 - Use <pre><code class="language-xxx"> for code examples.
-- Avoid unnecessary styling, decoration, or explanation.
+- Avoid unnecessary styling, decoration .
 - DO NOT mention you are returning HTML or say "here is a code block".
 - DO NOT echo this instruction or repeat the user prompt.
 
