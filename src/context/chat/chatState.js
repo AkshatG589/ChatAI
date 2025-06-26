@@ -112,7 +112,7 @@ const deleteChat = async (chatId, token) => {
 //sending guest requests
 const sendGuestMessage = async (request) => {
   try {
-    const res = await fetch("http://localhost:5000/api/guest/message", {
+    const res = await fetch(`${host}/api/guest/message`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
