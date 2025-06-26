@@ -1,32 +1,26 @@
 // src/components/ChatBox.js
 import React, { useState, useContext } from "react";
 import ChatContext from "../context/chat/chatContext";
-import "./css/animation.css"
+import "./css/animation.css";
+
 const ChatBox = () => {
   const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
-  const { currentChatId, sendMessage ,sendGuestMessage} = useContext(ChatContext);
+  const { currentChatId, sendMessage } = useContext(ChatContext);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  const trimmed = prompt.trim();
-  if (!trimmed) return;
+    e.preventDefault();
+    const trimmed = prompt.trim();
+    if (!trimmed || !currentChatId) return;
 
-  setLoading(true);
+    setLoading(true);
 
-  const token = localStorage.getItem("token");
-
-  if (token && currentChatId) {
-    // Authenticated user
+    const token = localStorage.getItem("token");
     await sendMessage(currentChatId, trimmed, token);
-  } else {
-    // Guest user
-     await sendGuestMessage(trimmed);
-  }
 
-  setPrompt("");
-  setLoading(false);
-};
+    setPrompt("");
+    setLoading(false);
+  };
 
   return (
     <form
@@ -37,30 +31,39 @@ const ChatBox = () => {
       <div className="container d-flex gap-2">
         <input
           type="text"
-          className="form-control"
-          placeholder="Type your message..."
+          className="form-control text-muted"
+          placeholder={
+            currentChatId
+              ? "Type your message..."
+              : "Select or create a chat to type ..."
+          }
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
+          disabled={!currentChatId}
         />
-<button
-  className="btn btn-dark d-flex align-items-center justify-content-center"
-  type="submit"
-  disabled={!prompt.trim() || loading}
-  style={{ width: "3rem", height: "3rem" }}
->
-  {loading ? (
-    <i
-      className="bi bi-arrow-repeat"
-      style={{
-        fontSize: "1.4rem",
-        animation: "spin 1s linear infinite",
-        display: "inline-block",
-      }}
-    ></i>
-  ) : (
-    <i className="bi bi-arrow-up-circle" style={{ fontSize: "1.4rem" }}></i>
-  )}
-</button>
+
+        <button
+          className="btn btn-dark d-flex align-items-center justify-content-center"
+          type="submit"
+          disabled={!prompt.trim() || loading || !currentChatId}
+          style={{ width: "3rem", height: "3rem" }}
+        >
+          {loading ? (
+            <i
+              className="bi bi-arrow-repeat"
+              style={{
+                fontSize: "1.4rem",
+                animation: "spin 1s linear infinite",
+                display: "inline-block",
+              }}
+            ></i>
+          ) : (
+            <i
+              className="bi bi-arrow-up-circle"
+              style={{ fontSize: "1.4rem" }}
+            ></i>
+          )}
+        </button>
       </div>
     </form>
   );

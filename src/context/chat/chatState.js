@@ -7,7 +7,7 @@ const ChatState = ({ children }) => {
   const [chats, setChats] = useState([]);
   const [currentChatId, setCurrentChatId] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [guestMessages, setGuestMessages] = useState([]);
+//  const [guestMessages, setGuestMessages] = useState([]);
 
   // 📌 Fetch all chats
   const fetchChats = async (token) => {
@@ -110,6 +110,7 @@ const deleteChat = async (chatId, token) => {
 };
 
 //sending guest requests
+/*
 const sendGuestMessage = async (request) => {
   try {
     const res = await fetch(`${host}/api/guest/message`, {
@@ -130,6 +131,7 @@ const sendGuestMessage = async (request) => {
     return null;
   }
 };
+*/
   return (
     <ChatContext.Provider
       value={{
@@ -141,8 +143,8 @@ const sendGuestMessage = async (request) => {
         selectChat,
         sendMessage,
         deleteChat,
-        sendGuestMessage,
-        guestMessages,
+        /*sendGuestMessage,
+        guestMessages,*/
       }}
     >
       {children}

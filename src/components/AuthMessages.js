@@ -6,7 +6,6 @@ import NewChat from "./NewChat";
 const AuthMessages = () => {
   const { currentChatId, messages , selectChat} = useContext(ChatContext);
   const messageContainerRef = useRef(null);
-
   useEffect(() => {
   if (currentChatId) {
     selectChat(currentChatId, localStorage.getItem("token"));
@@ -20,7 +19,6 @@ const AuthMessages = () => {
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
     }
   }, [currentChatId, messages]);
-
   return (
     <>
       <div

@@ -112,7 +112,7 @@ const Hamburg = () => {
                   ))}
                 </ul>
               ) : (
-                <p className="text-muted">{token? "No chats yet" : "LogIn/SignUp to save chats" }</p>
+                <p className="text-muted">{token? "No chats yet" : "Login / Signup to save chats" }</p>
               )}
             </div>
           </div>
