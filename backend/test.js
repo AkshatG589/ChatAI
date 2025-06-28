@@ -1,22 +1,22 @@
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { OpenAI } = require("openai");
 require("dotenv").config();
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 async function test() {
-  const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+  try {
+    const chatCompletion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo", // ✅ Use GPT-3.5
+      messages: [{ role: "user", content: "What is Java?" }],
+    });
 
-  const result = await model.generateContent({
-    contents: [
-      {
-        role: "user",
-        parts: [{ text: "what is java" }]
-      }
-    ]
-  });
-
-  const response = result.response.text();
-  console.log("✅ Gemini Response:", response);
+    const response = chatCompletion.choices[0].message.content;
+    console.log("✅ OpenAI Response:", response);
+  } catch (err) {
+    console.error("❌ Error:", err);
+  }
 }
 
-test().catch(console.error);
+test();

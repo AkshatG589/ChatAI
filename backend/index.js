@@ -17,6 +17,7 @@ app.use("/api/auth", require("./routes/auth"))
 app.use("/api/chats", require("./routes/chats"))
 app.use("/api/messages", require("./routes/messages"))
 app.use("/api/guest", require("./routes/guestMessages"))
+app.use("/api/admin", require("./routes/admin"));
 // Test route*/
 
 app.get('/', (req, res) => {

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useRef } from "react";
 import ChatContext from "../context/chat/chatContext";
+import { Link } from "react-router-dom";
 import ChatBox from "./ChatBox";
 import NewChat from "./NewChat";
 
@@ -53,15 +54,29 @@ const AuthMessages = () => {
           >
             <NewChat />
             <h4>Create New Chat</h4>
+<Link
+  to="/profile"
+  className="btn btn-outline-primary fw-bold d-inline-flex align-items-center gap-2"
+  style={{ fontSize: "1rem", padding: "8px 16px", borderRadius: "8px" }}
+>
+  <i className="bi bi-person-lines-fill"></i> Connect with Developer
+</Link>
           </div>
         ) : messages.length === 0 ? (
           <div
             className="d-flex justify-content-center align-items-center"
-            style={{ height: "100%", width: "100%" }}
+            style={{ height: "100%", width: "100%" ,flexDirection: "column" }}
           >
             <p className="text-dark fs-4" style={{ fontWeight: "bold" }}>
               What can I help you with?
             </p>
+            <Link
+  to="/profile"
+  className="btn btn-outline-primary fw-bold d-inline-flex align-items-center gap-2"
+  style={{ fontSize: "1rem", padding: "8px 16px", borderRadius: "8px" }}
+>
+  <i className="bi bi-person-lines-fill"></i> Connect with Developer
+</Link>
           </div>
         ) : (
           messages.map((msg, index) => (
